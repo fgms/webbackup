@@ -1,0 +1,12 @@
+-
+  name: example.com
+  active: True
+  ssh:
+    host: example.com
+    user: example.com
+    key: example.pem
+  remotes:
+    - domains
+    - mysql
+  databases:
+    - {name: ''  ,user:'' , pass: '', host: ''}
