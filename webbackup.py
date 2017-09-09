@@ -24,6 +24,9 @@ class WebBackup(object):
         self.website_config={}
         self.cloud={}
         self.logger={}
+        self.log_capture_string = StringBuffer()
+
+        version = subprocess.check_output(['git','rev-parse','--short','HEAD']).decode().strip('\n')
         try:
             self.opts, args = getopt.getopt(options,"hd:", ["config=","yaml=","site=","dry-run","debug","restore-point"])
         except getopt.GetoptError:
@@ -36,6 +39,9 @@ class WebBackup(object):
 
         self.setupLogging()
         self.logger.info(self.opts)
+        self.logger.info('Version: %s'%(version))
+
+
 
         # setup pcloud interface
         user = self.getDictValue('user', self.sections['pcloud'])
@@ -43,6 +49,9 @@ class WebBackup(object):
         self.cloud = CloudInterface(user,passwd)
         self.loadYamlWeb(self.getDictValue('config_file_id', self.sections['pcloud']))
 
+    def __del__(self):
+        msg = self.log_capture_string.getvalue()
+        self.send_mail(msg);
 
     def backupSites(self):
         for site in self.website_config['hosting']:
@@ -207,7 +216,6 @@ class WebBackup(object):
 
     def setupLogging(self):
         self.logger = logging.getLogger('basic_logger')
-        log_capture_string = StringBuffer()
         FORMAT = '%(asctime)s - %(levelname)s - %(message)s'
         if self.getOpts('--debug') :
             logging.basicConfig(level=logging.DEBUG,format=FORMAT)
@@ -218,7 +226,7 @@ class WebBackup(object):
         logging.getLogger("paramiko").setLevel(logging.WARNING)
 
         # log_capture_string.encoding = 'cp1251'
-        ch = logging.StreamHandler(log_capture_string)
+        ch = logging.StreamHandler(self.log_capture_string)
 
         if self.getOpts('--debug') :
             ch.setLevel(logging.DEBUG)
