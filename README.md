@@ -23,14 +23,35 @@ pip3 install pycloud
 | --no-email    |  does not send email |
 | --no-archive  |  does not archive   |
 | --test-connection    | does similar to dry run but test connections |
-| --set-restore-point | creates a tar with month day and year for permanent restore point |
+| --restore-point | creates a tar with month day and year for permanent restore point |
 | --debug       | puts loggin into debug instead of info |
+
+
+## Operation
+
+### Operation of config
+* load local config file via command line (pcloud credentials, config fileid)
+* load site config from pcloud to tmp/config directory.
+* clean up when operations is completed.
+
+### Operation of backup
+
+### Operation of restore
+
+### Operation of restore to secondary hosting
+
+
+* after loading sites into memory, it creates backups.
+* each backup creates its own directory structure, and ideally every month creates full backup with partial backup for the remanding days.
+*
 
 
 ## Running
 ```
-python2 webbackup.py [options]
+python3 webbackup.py [options]
 ```
+
+
 
 ## Todo
 
