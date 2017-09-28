@@ -103,7 +103,7 @@ class WebBackup(object):
 
         subfolders = os.listdir(directory)
         for folder in subfolders:
-            if folder == 'mysql' or d.month == 1 or d.month == 15 or  self.getOpts('--restore-point'):
+            if folder == 'mysql' or d.day == 1 or d.day == 15 or  self.getOpts('--restore-point'):
                 filename = name+'-'+folder+'-month-'+ str(d.month)+'-day-'+ str(d.day) +'.tar.gz'
                 source = directory+folder;
                 tar_file = archive_dir+filename

@@ -10,9 +10,11 @@
 
 ## Installation
 ```
-git clone https://github.com/sturple/webbackup.git
+git clone https://github.com/fgms/webbackup.git
 pip3 install paramiko
-pip3 install pycloud
+git clone https://github.com/sturple/pycloud.git
+pip3 install -e PyCloud
+pip3 install pyyaml
 ```
 
 ## Options flags
