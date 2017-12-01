@@ -63,7 +63,7 @@ class WebBackup(object):
 
 
     def backupSite(self,site):
-        self.logger.info('*** Section ' + site['name'])
+        self.logger.info('**** Section ' + site['name'])
         site['ssh']['key'] = self.getPath('pem_path')+ site['ssh']['key'];
         if 'port' not in site['ssh']:
             site['ssh']['port'] = 22
@@ -104,7 +104,7 @@ class WebBackup(object):
         subfolders = os.listdir(directory)
         for folder in subfolders:
             if folder == 'mysql' or d.day == 1 or d.day == 15 or  self.getOpts('--restore-point'):
-                self.logger.info('Archiving Folder ... ' + folder)
+                self.logger.info('******** Archiving Folder ... ' + folder)
                 filename = name+'-'+folder+'-month-'+ str(d.month)+'-day-'+ str(d.day) +'.tar.gz'
                 source = directory+folder;
                 tar_file = archive_dir+filename
@@ -270,10 +270,10 @@ class WebBackup(object):
         smtpserver.starttls()
         smtpserver.ehlo
         smtpserver.login(data['user'],data['password'])
-        header = 'To:' + data['to'] + '\n' + 'From: ' + data['user'] + '\n' + 'Subject:FGMS Backup Results For: '+d.isoformat()+'\n'
+        header = 'To:' + data['to'] + '\n' + 'From: ' + data['user'] + '\n'
         if data['cc']:
             header += 'Cc:'+data['cc']+'\n'
-
+        header += 'Subject:FGMS Backup Results For: '+d.isoformat()+'\n'
         smtpserver.sendmail(data['user'], data['to'],"%s \n\r %s" %(header, msg))
         smtpserver.close()
 
