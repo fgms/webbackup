@@ -47,7 +47,6 @@ class WebBackup(object):
         user = self.getDictValue('user', self.sections['pcloud'])
         passwd = self.getDictValue('pass', self.sections['pcloud'])
         self.cloud = CloudInterface(user,passwd)
-        self.logger.info('u: %s p: %s'%(user,passwd))
         self.loadYamlWeb(self.getDictValue('config_file_id', self.sections['pcloud']))
 
     def __del__(self):
@@ -126,6 +125,7 @@ class WebBackup(object):
                 db['host'] = 'localhost'
             if db['user'] and db['pass'] and db['name']:
                 cmds.append("mysqldump -h %s -u %s -p'%s' %s > %s" % (db['host'],db['user'],db['pass'], db['name'], 'mysql/'+db['name']+'.sql'))
+                self.logger.info('---mysqldump %'%db['name'])
         cmds.append("chmod -R 755 mysql")
         return cmds
 
@@ -141,6 +141,7 @@ class WebBackup(object):
             if ssh['options'] == 'ssh-dss':
                 rsync_option = rsync_option + ' -oHostKeyAlgorithms=+ssh-dss'
             cmds.append("rsync --delete  -arz -e 'ssh -i %s' %s %s " % (rsync_option, rsync_remote,rsync_local))
+            self.logger.info('...backup up %s'%rsync_remote)
         return cmds;
 
     def create_dir(self,path) :
