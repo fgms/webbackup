@@ -63,7 +63,7 @@ class WebBackup(object):
 
 
     def backupSite(self,site):
-        self.logger.info('**** Section ' + site['name'])
+        self.logger.info('**** Section %s ****' % site['name'])
         site['ssh']['key'] = self.getPath('pem_path')+ site['ssh']['key'];
         if 'port' not in site['ssh']:
             site['ssh']['port'] = 22
@@ -104,7 +104,7 @@ class WebBackup(object):
         subfolders = os.listdir(directory)
         for folder in subfolders:
             if folder == 'mysql' or d.day == 1 or d.day == 15 or  self.getOpts('--restore-point'):
-                self.logger.info('******** Archiving Folder ... ' + folder)
+                self.logger.info('[Archiving] %s '%folder)
                 filename = name+'-'+folder+'-month-'+ str(d.month)+'-day-'+ str(d.day) +'.tar.gz'
                 source = directory+folder;
                 tar_file = archive_dir+filename
@@ -125,7 +125,7 @@ class WebBackup(object):
                 db['host'] = 'localhost'
             if db['user'] and db['pass'] and db['name']:
                 cmds.append("mysqldump -h %s -u %s -p'%s' %s > %s" % (db['host'],db['user'],db['pass'], db['name'], 'mysql/'+db['name']+'.sql'))
-                self.logger.info('---mysqldump %s'%db['name'])
+                self.logger.info('[SQL]: %s'%db['name'])
         cmds.append("chmod -R 755 mysql")
         return cmds
 
@@ -141,7 +141,7 @@ class WebBackup(object):
             if ssh['options'] == 'ssh-dss':
                 rsync_option = rsync_option + ' -oHostKeyAlgorithms=+ssh-dss'
             cmds.append("rsync --delete  -arz -e 'ssh -i %s' %s %s " % (rsync_option, rsync_remote,rsync_local))
-            self.logger.info('...backup up %s'%remote)
+            self.logger.info('[Remote] %s'%remote)
         return cmds;
 
     def create_dir(self,path) :
@@ -266,6 +266,7 @@ class WebBackup(object):
 
     def send_mail(self, msg='Test Message'):
         d = date.today()
+        print(self.website_config)
         data = self.website_config['email']
         smtpserver = smtplib.SMTP(data['server'],587)
         smtpserver.ehlo()
